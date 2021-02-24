@@ -44,6 +44,7 @@ function DefaultPolicy(s)
         choose a in A(s) uniformly at random
         s = f(s, a)
     return reward for state s
+function Backup(v, Delta)
 
 function BackupFor2Players(v, Delta)
     while v is not null do
@@ -54,4 +55,8 @@ function BackupFor2Players(v, Delta)
 
 
 For the simulation, I think we should use a simple 50/50 random selection. Since, by my dataset, the odds of winning are approximatly 50/50, it should be a sufficient indicator. In theory,
-a neural network could possibly make better, but this 
+a neural network could possibly make better, but this is overkill IMO.
+
+For seperation of concerns, I will implement a Node class that will act as a node in the tree, and then implement a MCTS class that will do the selection, extension, simulation and backpropagation.
+
+Currently my plan for the simulation is for the MCTS to act as one player, and then have the other player be a player who just selects champions at random. 
