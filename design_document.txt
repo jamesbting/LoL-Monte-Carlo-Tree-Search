@@ -1,0 +1,57 @@
+This repository aims to develop an algorithm for selecting champions, using the Monte Carlo Tree Search mathod (UCT variant).
+
+Design based on these papers: 
+https://ieeexplore.ieee.org/abstract/document/6145622?casa_token=chKDohYlTEwAAAAA:DAnj1j43DJ-VWUkgE2rkeFEGho2C6YTO-WJ97L2LNAXpE9fCxrGpJ9EmfAO_qd6z4n9oscmW
+https://www.researchgate.net/publication/220546131_Monte-Carlo_tree_search_and_rapid_action_value_estimation_in_computer_Go
+
+Pseudocode for a Two-player UCT:
+
+Notation:
+C_p = exploration term (normally 1/sqrt(2))
+Delta = reward value(in this case it would be 1/0/-1 for win/loss/draw)
+Q(v) = total reward of all playouts that passed through this node v 
+N(v) = number of times node v has been visited
+
+
+function UCTSearch(s_0)
+    create a root node v_0 with state s_0
+    while within computationl budget do
+        v_l = TreePolicy(v_0)
+        Delta = DefaultPolicy(s(v_l))
+        Backup(v_l, Delta)
+    return a(BestChild(v_0,0))
+
+function TreePolicy(v)
+    while v is a non terminal node do
+        if v not fully expanded then
+            return Expand(v)
+        else
+            v = BestChild(v, C_p)
+    return v
+
+function Expand(v)
+    choose a from the set of untried actions A(s(v))
+    add a new child v' to v 
+        with s(v') = f(s(v),a)
+        and a(v') = a 
+    return v'
+
+function BestChild(v, c)
+    return argmax over the children of v of (Q(v')/N(v')) + c sqrt(2ln(N(v))/N(v'))
+
+function DefaultPolicy(s)
+    while s is non-terminal do
+        choose a in A(s) uniformly at random
+        s = f(s, a)
+    return reward for state s
+
+function BackupFor2Players(v, Delta)
+    while v is not null do
+        N(v) = N(v) + 1
+        Q(v) = Q(v) + Delta(v, p)
+        Delta = - Delta
+        v = parent of v
+
+
+For the simulation, I think we should use a simple 50/50 random selection. Since, by my dataset, the odds of winning are approximatly 50/50, it should be a sufficient indicator. In theory,
+a neural network could possibly make better, but this 
