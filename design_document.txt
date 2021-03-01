@@ -1,4 +1,4 @@
-This repository aims to develop an algorithm for selecting champions, using the Monte Carlo Tree Search mathod (UCT variant).
+ This repository aims to develop an algorithm for selecting champions, using the Monte Carlo Tree Search mathod (UCT variant).
 
 Design based on these papers: 
 https://ieeexplore.ieee.org/abstract/document/6145622?casa_token=chKDohYlTEwAAAAA:DAnj1j43DJ-VWUkgE2rkeFEGho2C6YTO-WJ97L2LNAXpE9fCxrGpJ9EmfAO_qd6z4n9oscmW
