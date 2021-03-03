@@ -1,0 +1,17 @@
+[DEFULAT]
+filter:
+  enabled: False
+  desiredColumns: 
+    - 'teams.0.win',
+    - 'participants.0.championId',
+    - 'participants.1.championId',
+    - 'participants.2.championId',
+    - 'participants.3.championId',
+    - 'participants.4.championId',
+    - 'participants.5.championId',
+    - 'participants.6.championId',
+    - 'participants.7.championId',
+    - 'participants.8.championId',
+    - 'participants.9.championId'
+  fileName: "../../../data/post-cleaning-dataset.csv"
+  outputFileName: "data/filtered_dataset.csv"

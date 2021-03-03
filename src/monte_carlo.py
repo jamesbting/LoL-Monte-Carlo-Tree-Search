@@ -7,6 +7,7 @@ def UCTSearch(initial_state, max_iters):
         selected_node = treePolicy(root)
         reward = defaultPolicy(selected_node.state)
         backpropagate(selected_node, reward)
+        print(i)
     return root.bestChild(exploration_term=0)
 
 def treePolicy(node):
