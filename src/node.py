@@ -17,7 +17,7 @@ class Node(object):
     def expand(self):
         self.expanded = True
         new_child = Node(parent=self, state=self.state)
-        action = self.possible_actions[random() * len(self.possible_actions)]
+        action = self.possible_actions[int(random() * len(self.possible_actions))]
         self.possible_actions.remove(action)
         self.children.append(new_child)
         return new_child
@@ -37,8 +37,8 @@ class Node(object):
                 redTeamSelected += 1
         return blueTeamSelected == 5 and redTeamSelected == 5
 
-    def isExpanded(self):
+    def isExpandable(self):
         for child in self.children:
-            if child.expanded:
-                return False
-        return not self.isTerminal()
+            if not child.expanded:
+                return self.isTerminal()
+        return False

@@ -1,8 +1,8 @@
 from node import Node
 from random import random as random
 
-def UCTSearch(initial_state, max_iters):
-    root = Node(state=initial_state)
+def UCTSearch(initial_state,possible_actions, max_iters):
+    root = Node(state=initial_state, possible_actions=possible_actions)
     for i in range(max_iters + 1):
         selected_node = treePolicy(root)
         reward = defaultPolicy(selected_node.state)
@@ -13,7 +13,8 @@ def UCTSearch(initial_state, max_iters):
 def treePolicy(node):
     curr = node
     while not curr.isTerminal():        
-        if not curr.isExpanded():
+        if not curr.isExpandable():
+            print('here')
             return curr.expand()
         else:
             curr = curr.bestChild()
