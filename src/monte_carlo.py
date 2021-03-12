@@ -2,8 +2,8 @@ from node import Node
 from random import random as random
 
 
-def UCTSearch(initial_state, max_iters):
-    root = Node(state=initial_state)
+def UCTSearch(initial_state, max_iters, max_children):
+    root = Node( max_children, state=initial_state)
 
     for i in range(max_iters + 1):
         selected_node = treePolicy(root)

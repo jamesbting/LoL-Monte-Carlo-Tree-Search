@@ -9,7 +9,7 @@ from random import random as random
 class Node(object):
     players = {"blue": 0, "red": 1}
 
-    def __init__(self, parent=None, state=None, player=players["blue"]):
+    def __init__(self, max_children, parent=None, state=None, player=players["blue"]):
         self.q = 0
         self.n = 0
         self.children = []
@@ -17,15 +17,12 @@ class Node(object):
         self.state = state
         self.expanded = False
         self.player = 1 - self.parent.player if parent is not None else player
-        self.possible_actions = self.generate_possible_actions()
+        self.max_children = max_children
 
     def expand(self):
         self.expanded = True
-        if len(self.possible_actions) == 0:
-            return self.best_child()
-        action = self.possible_actions[int(random() * len(self.possible_actions))]
-        self.possible_actions.remove(action)
-        new_child = Node(parent=self, state=action, player=(1 - self.player))
+        action = self.generate_action()
+        new_child = Node(self.max_children, parent=self, state=action, player=(1 - self.player))
         self.children.append(new_child)
         return new_child
 
@@ -49,7 +46,7 @@ class Node(object):
             if not child.expanded:
                 return not self.is_terminal()
 
-        return not self.is_terminal() and len(self.possible_actions) != 0
+        return not self.is_terminal() and len(self.children) <= self.max_children
 
     def generate_possible_actions(self):
         res = []
@@ -61,6 +58,35 @@ class Node(object):
                 action[i] = selection
                 res.append(tuple(action))
         return res
+
+    def is_first_or_last(self):
+        blueTeamSelected = 0
+        redTeamSelected = 0
+        for selection in self.state:
+            if selection == 1:
+                blueTeamSelected += 1
+            elif selection == -1:
+                redTeamSelected += 1
+        return (blueTeamSelected == 0 and redTeamSelected == 0) or \
+               (blueTeamSelected == 5 and redTeamSelected == 4) or \
+               (blueTeamSelected == 4 and redTeamSelected == 5)
+
+    def generate_action(self):
+        selection = 1 if self.player == Node.players["blue"] else -1
+        action = list(self.state)[:]
+
+        i = int(random() * (len(self.state) - 1))
+        while self.state[i] != 0:
+            i = int(random() * (len(self.state) - 1))
+        action[i] = selection
+
+        if not self.is_first_or_last():
+            i = int(random() * (len(self.state) - 1))
+            while self.state[i] != 0:
+                i = int(random() * (len(self.state) - 1))
+            action[i] = selection
+        return action
+
 
     def __str__(self):
         return f'Node:\n q:{self.q};\n n:{self.n};\n state:{self.state}'

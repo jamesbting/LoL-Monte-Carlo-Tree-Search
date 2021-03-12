@@ -33,7 +33,7 @@ def main():
     champion_pool = json.load(open(config['champions']['fileName'], 'r'))
     initial_state = generate_intial_state(['121', '24', '18'], ['11', '26'], champion_pool)
     print(initial_state)
-    res = UCT(initial_state, 10000)
+    res = UCT(initial_state, 10000, len(champion_pool.keys()))
     print(res)
     print(res.state)
     print(is_terminal(res.state))
