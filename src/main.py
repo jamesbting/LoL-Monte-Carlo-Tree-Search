@@ -1,10 +1,12 @@
 from filter import clean_data as filter
 from monte_carlo import UCTSearch as UCT
 import json
+import os
+
 config = {
-    'filter' : {
+    'filter': {
         'enabled': False,
-        'desiredColumns':  [
+        'desiredColumns': [
             'teams.0.win',
             'participants.0.championId',
             'participants.1.championId',
@@ -15,34 +17,57 @@ config = {
             'participants.6.championId',
             'participants.7.championId',
             'participants.8.championId',
-            'participants.9.championId',],
+            'participants.9.championId', ],
         'fileName': "../../../data/post-cleaning-dataset.csv",
-        'outputFileName':"data/filtered-dataset.csv"
-        },
-    'champions' : {
-       'fileName': "data/champions-cleaned.json"
+        'outputFileName': "data/filtered-dataset.csv"
+    },
+    'champions': {
+        'fileName': "../data/champions-cleaned.json"
     }
 }
 
+
 def main():
-    if(config['filter']['enabled']):
-        filter(config['filter']["fileName"], config['filter']["outputFileName"],config['filter']["desiredColumns"])
-    champion_pool = json.load(open('data/champions-cleaned.json','r'))
-    initial_state = tuple([0] * len(champion_pool.keys()))
-    possible_actions = generate_possible_actions(initial_state)
-    UCT(initial_state,possible_actions, 5000)
+    if config['filter']['enabled']:
+        filter(config['filter']["fileName"], config['filter']["outputFileName"], config['filter']["desiredColumns"])
+    champion_pool = json.load(open(config['champions']['fileName'], 'r'))
+    initial_state = generate_intial_state(['121', '24', '18'], ['11', '26'], champion_pool)
+    print(initial_state)
+    res = UCT(initial_state, 10000)
+    print(res)
+    print(res.state)
+    print(is_terminal(res.state))
+    print(is_equal(res.state, initial_state))
 
-def generate_possible_actions(initial_state):
-    res = []
-    for i in range(len(initial_state)):
-        blue = list(initial_state)[:]
-        red = list(initial_state)[:]
 
-        blue[i] = 1
-        red[i] = -1
-        res.append(tuple(blue))
-        res.append(tuple(red))
-    return res
+def is_terminal(state):
+    blueTeamSelected = 0
+    redTeamSelected = 0
+    for selection in state:
+        if selection == 1:
+            blueTeamSelected += 1
+        elif selection == -1:
+            redTeamSelected += 1
+    return blueTeamSelected == 5 and redTeamSelected == 5
+
+
+def generate_intial_state(blue_team, red_team, champion_pool):
+    arr = [0] * len(champion_pool.keys())
+    for blue in blue_team:
+        arr[int(blue)] = 1
+    for red in red_team:
+        arr[int(red)] = -1
+    return tuple(arr)
+
+
+def is_equal(a, b):
+    if len(a) != len(b):
+        return False
+    for i in range(len(a)):
+        if a[i] != b[i]:
+            return False
+    return True
+
 
 if __name__ == '__main__':
     main()
