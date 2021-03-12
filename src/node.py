@@ -45,14 +45,11 @@ class Node(object):
 
     def is_expandable(self):
         # if nonterminal_state and unexpanded_children then true
-        temp1 = not self.is_terminal()
-        temp2 = len(self.possible_actions) != 0
         for child in self.children:
             if not child.expanded:
                 return not self.is_terminal()
 
         return not self.is_terminal() and len(self.possible_actions) != 0
-
 
     def generate_possible_actions(self):
         res = []

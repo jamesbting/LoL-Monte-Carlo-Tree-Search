@@ -1,7 +1,7 @@
+import json
+
 from filter import clean_data as filter
 from monte_carlo import UCTSearch as UCT
-import json
-import os
 
 config = {
     'filter': {
