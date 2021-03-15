@@ -36,18 +36,6 @@ def main():
     res = UCT(initial_state, config['iterations'])
     print('Result:', res)
 
-
-def is_terminal(state):
-    blueTeamSelected = 0
-    redTeamSelected = 0
-    for selection in state:
-        if selection == 1:
-            blueTeamSelected += 1
-        elif selection == -1:
-            redTeamSelected += 1
-    return blueTeamSelected == 5 and redTeamSelected == 5
-
-
 def generate_initial_state(blue_team, red_team, champion_pool):
     arr = [0] * len(champion_pool.keys())
     for blue in blue_team:
@@ -55,16 +43,6 @@ def generate_initial_state(blue_team, red_team, champion_pool):
     for red in red_team:
         arr[int(red)] = -1
     return tuple(arr)
-
-
-def is_equal(a, b):
-    if len(a) != len(b):
-        return False
-    for i in range(len(a)):
-        if a[i] != b[i]:
-            return False
-    return True
-
 
 if __name__ == '__main__':
     main()

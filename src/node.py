@@ -11,13 +11,11 @@ class Node(object):
         self.children = []
         self.parent = parent
         self.state = state
-        self.expanded = False
         self.player = 1 - self.parent.player if parent is not None else player
         self.possible_actions = self.generate_possible_actions()
         self.depth = depth
 
     def expand(self):
-        self.expanded = True
         action = self.possible_actions[int(random() * (len(self.possible_actions) - 1))]
         self.possible_actions.remove(action)
         new_child = Node(parent=self, state=action, player=(1 - self.player), depth=self.depth + 1)
@@ -31,8 +29,6 @@ class Node(object):
             if confidence_bounds[i] > confidence_bounds[max_index]:
                 max_index = i
         return self.children[max_index]
-        #s = sorted(self.children, key=lambda c: c.q / c.n + (exploration_term * sqrt(2 * log(self.n) / c.n))) # change to linear scan for O(nlgn) to O(n)
-        #return s[len(s) - 1]
 
     def is_terminal(self):
         blueTeamSelected = 0

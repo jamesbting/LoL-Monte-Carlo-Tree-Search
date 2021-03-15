@@ -11,11 +11,8 @@ def UCTSearch(initial_state, max_iters):
         selected_node = treePolicy(root)
         reward = defaultPolicy(selected_node.state)
         backpropagate(selected_node, reward)
-        print("iteration: ", i)
-
-    print(root.player)
+        print("Iteration: ", i)
     return root.best_child(0)
-    #return get_result(root, 0)
 
 
 def treePolicy(node):
@@ -40,19 +37,3 @@ def backpropagate(node, reward):
         curr.q += reward
         reward = 1 - reward
         curr = curr.parent
-
-
-def get_result(root, depth):
-    print(f"depth: {depth}")
-    if len(root.children) == 0:
-        return root
-    return get_result(root.best_child(exploration_term=0), depth + 1)
-
-def bfs(root):
-    q = queue.Queue()
-    q.put(root)
-    while(not q.empty()):
-        curr = q.get()
-        for child in curr.children:
-            q.put(child)
-        print(curr.depth)
