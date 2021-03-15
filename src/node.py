@@ -5,7 +5,7 @@ from random import random as random
 class Node(object):
     players = {"blue": 0, "red": 1}
 
-    def __init__(self, parent=None, state=None, player=0, depth=0):
+    def __init__(self, parent=None, state=None, player=players["blue"], depth=0):
         self.q = 0
         self.n = 0
         self.children = []
@@ -15,7 +15,6 @@ class Node(object):
         self.player = 1 - self.parent.player if parent is not None else player
         self.possible_actions = self.generate_possible_actions()
         self.depth = depth
-        print("depth of tree: ", self.depth)
 
     def expand(self):
         self.expanded = True
@@ -44,14 +43,6 @@ class Node(object):
             elif selection == -1:
                 redTeamSelected += 1
         return blueTeamSelected == 5 and redTeamSelected == 5
-
-    def is_expandable(self):
-        # if not terminal_state and has at least one unexpanded children then true
-        is_self_expandable = not self.is_terminal() and len(self.possible_actions) != 0
-        for child in self.children:
-            if not child.expanded:
-                return is_self_expandable
-        return is_self_expandable
 
     def generate_possible_actions(self):
         res = []
