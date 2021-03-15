@@ -22,9 +22,9 @@ config = {
         'outputFileName': "data/filtered-dataset.csv"
     },
     'champions': {
-        'fileName': "data/champions-cleaned.json"
+        'fileName': "../data/champions-cleaned.json"
     },
-    'iterations': 1000000
+    'iterations': 100000
 }
 
 

@@ -26,8 +26,14 @@ class Node(object):
         return new_child
 
     def best_child(self, exploration_term=pow(2, -0.5)):
-        s = sorted(self.children, key=lambda c: c.q / c.n + (exploration_term * sqrt(2 * log(self.n) / c.n))) # change to linear scan for O(nlgn) to O(n)
-        return s[len(s) - 1]
+        confidence_bounds = [c.q / c.n + (exploration_term * sqrt(2 * log(self.n) / c.n)) for c in self.children]
+        min_index = 0
+        for i in range(len(confidence_bounds)):
+            if confidence_bounds[i] < confidence_bounds[min_index]:
+                min_index = i
+        return self.children[min_index]
+        #s = sorted(self.children, key=lambda c: c.q / c.n + (exploration_term * sqrt(2 * log(self.n) / c.n))) # change to linear scan for O(nlgn) to O(n)
+        #return s[len(s) - 1]
 
     def is_terminal(self):
         blueTeamSelected = 0
