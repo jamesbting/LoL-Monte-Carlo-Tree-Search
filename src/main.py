@@ -22,8 +22,9 @@ config = {
         'outputFileName': "data/filtered-dataset.csv"
     },
     'champions': {
-        'fileName': "../data/champions-cleaned.json"
-    }
+        'fileName': "data/champions-cleaned.json"
+    },
+    'iterations': 1000000
 }
 
 
@@ -32,7 +33,7 @@ def main():
         filter(config['filter']["fileName"], config['filter']["outputFileName"], config['filter']["desiredColumns"])
     champion_pool = json.load(open(config['champions']['fileName'], 'r'))
     initial_state = generate_initial_state(['121', '24', '18'], ['11', '26'], champion_pool)
-    res = UCT(initial_state, 100000)
+    res = UCT(initial_state, config['iterations'])
     print('Result:', res)
 
 
