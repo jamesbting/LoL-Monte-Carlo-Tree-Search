@@ -2,14 +2,10 @@ from math import pow, sqrt, log
 from random import random as random
 
 
-# states will be a N-dimensional vector, where N is the number champions, and the following values:
-# 1: Champion selected by blue team
-# -1: Champion selected by red team
-# 0: unselected
 class Node(object):
     players = {"blue": 0, "red": 1}
 
-    def __init__(self, parent=None, state=None, player=players["blue"]):
+    def __init__(self, parent=None, state=None, player=0, depth=0):
         self.q = 0
         self.n = 0
         self.children = []
@@ -18,19 +14,19 @@ class Node(object):
         self.expanded = False
         self.player = 1 - self.parent.player if parent is not None else player
         self.possible_actions = self.generate_possible_actions()
+        self.depth = depth
+        print("depth of tree: ", self.depth)
 
     def expand(self):
         self.expanded = True
-        if len(self.possible_actions) == 0:
-            return self.best_child()
-        action = self.possible_actions[int(random() * len(self.possible_actions))]
+        action = self.possible_actions[int(random() * (len(self.possible_actions) - 1))]
         self.possible_actions.remove(action)
-        new_child = Node(parent=self, state=action, player=(1 - self.player))
+        new_child = Node(parent=self, state=action, player=(1 - self.player), depth=self.depth + 1)
         self.children.append(new_child)
         return new_child
 
     def best_child(self, exploration_term=pow(2, -0.5)):
-        s = sorted(self.children, key=lambda c: c.q / c.n + (exploration_term * sqrt(2 * log(self.n) / c.n)))
+        s = sorted(self.children, key=lambda c: c.q / c.n + (exploration_term * sqrt(2 * log(self.n) / c.n))) # change to linear scan for O(nlgn) to O(n)
         return s[len(s) - 1]
 
     def is_terminal(self):
@@ -44,12 +40,12 @@ class Node(object):
         return blueTeamSelected == 5 and redTeamSelected == 5
 
     def is_expandable(self):
-        # if nonterminal_state and unexpanded_children then true
+        # if not terminal_state and has at least one unexpanded children then true
+        is_self_expandable = not self.is_terminal() and len(self.possible_actions) != 0
         for child in self.children:
             if not child.expanded:
-                return not self.is_terminal()
-
-        return not self.is_terminal() and len(self.possible_actions) != 0
+                return is_self_expandable
+        return is_self_expandable
 
     def generate_possible_actions(self):
         res = []
@@ -63,4 +59,4 @@ class Node(object):
         return res
 
     def __str__(self):
-        return f'Node:\n q:{self.q};\n n:{self.n};\n state:{self.state}'
+        return f"Node:\n q:{self.q};\n n:{self.n};\n state:{self.state};\n depth:{self.depth}"

@@ -31,13 +31,9 @@ def main():
     if config['filter']['enabled']:
         filter(config['filter']["fileName"], config['filter']["outputFileName"], config['filter']["desiredColumns"])
     champion_pool = json.load(open(config['champions']['fileName'], 'r'))
-    initial_state = generate_intial_state(['121', '24', '18'], ['11', '26'], champion_pool)
-    print(initial_state)
-    res = UCT(initial_state, 10000)
-    print(res)
-    print(res.state)
-    print(is_terminal(res.state))
-    print(is_equal(res.state, initial_state))
+    initial_state = generate_initial_state(['121', '24', '18'], ['11', '26'], champion_pool)
+    res = UCT(initial_state, 100000)
+    print('Result:', res)
 
 
 def is_terminal(state):
@@ -51,7 +47,7 @@ def is_terminal(state):
     return blueTeamSelected == 5 and redTeamSelected == 5
 
 
-def generate_intial_state(blue_team, red_team, champion_pool):
+def generate_initial_state(blue_team, red_team, champion_pool):
     arr = [0] * len(champion_pool.keys())
     for blue in blue_team:
         arr[int(blue)] = 1
