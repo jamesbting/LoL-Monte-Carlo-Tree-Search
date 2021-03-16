@@ -1,5 +1,6 @@
 import json
-
+import time
+import psutil
 from filter import clean_data as filter
 from monte_carlo import UCTSearch as UCT
 
@@ -22,9 +23,9 @@ config = {
         'outputFileName': "data/filtered-dataset.csv"
     },
     'champions': {
-        'fileName': "../data/champions-cleaned.json"
+        'fileName': "data/champions-cleaned.json"
     },
-    'iterations': 1000
+    'iterations': 10000
 }
 
 
@@ -33,8 +34,16 @@ def main():
         filter(config['filter']["fileName"], config['filter']["outputFileName"], config['filter']["desiredColumns"])
     champion_pool = json.load(open(config['champions']['fileName'], 'r'))
     initial_state = generate_initial_state(['121', '24', '18'], ['11', '26'], champion_pool)
+    start_time = time.time()
     res = UCT(initial_state, config['iterations'])
-    print('Result:', res)
+    finish_time = time.time()
+    show_results(res, finish_time - start_time, psutil.Process().memory_info().peak_wset)
+
+def show_results(result, time, memory_usage):
+    print('Result:', result)
+    print('Took ',time , ' seconds to run')
+    print('Peak memory usage was: ', memory_usage/1000000, 'megabytes')
+
 
 def generate_initial_state(blue_team, red_team, champion_pool):
     arr = [0] * len(champion_pool.keys())
