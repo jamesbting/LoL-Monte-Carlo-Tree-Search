@@ -2,15 +2,16 @@ import json
 import time
 import psutil
 import queue
-from random import random as random
+import simulation
 from monte_carlo import UCTSearch as UCT
 
 config = {
     'champions': {
         'fileName': "../../data/champions-cleaned.json"
     },
-    'iterations': 1000,
-    'defaultPolicy': 'random_winner', #options are: ['random_winner', 'nn', 'monte-carlo', 'similarity']
+    'filtered_dataset': '../../data/filtered-dataset.csv',
+    'iterations': 1,
+    'defaultPolicy': 'cosine', #options are: ['random_winner', 'nn', 'monte-carlo', 'cosine']
 }
 
 
@@ -20,17 +21,18 @@ def main():
    
 
     if config['defaultPolicy'] == 'random_winner':
-        run_algorithm(initial_state, config['iterations'], random_winner)
+        run_algorithm(initial_state, config['iterations'], simulation.random_winner)
+    if config['defaultPolicy'] == 'cosine':
+        combinations = simulation.cosine_metadata(config['filtered_dataset'])
+        run_algorithm(initial_state, config['iterations'], simulation.cosine_similarity, combinations)
 
-def run_algorithm(initial_state, iterations, defaultPolicy):
+
+def run_algorithm(initial_state, iterations, defaultPolicy, simulation_metadata=None):
     start_time = time.time()
-    res = UCT(initial_state, config['iterations'], random_winner)
+    res = UCT(initial_state, config['iterations'], defaultPolicy, simulation_metadata)
     finish_time = time.time()
     show_results(res, finish_time - start_time, psutil.Process().memory_info().peak_wset)
 
-
-def random_winner(state):
-    return 1 if random() > 0.5 else 0
 
 def show_results(result, time, memory_usage):
     print('Result:', result)

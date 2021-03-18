@@ -2,14 +2,14 @@ from node import Node
 from random import random as random
 import queue
 
-def UCTSearch(initial_state, max_iters, simulate_game):
+def UCTSearch(initial_state, max_iters, simulate_game, simulation_metadata=None):
     first_pick = list(Node.players.keys())[1 if random() > 0.5 else 0]
     print(f"The {first_pick} team will pick first.")
     root = Node(state=initial_state, player=Node.players[first_pick])
 
     for i in range(max_iters + 1):
         selected_node = treePolicy(root)
-        reward = simulate_game(selected_node.state) #default policy
+        reward = simulate_game(selected_node.state, simulation_metadata) #default policy
         backpropagate(selected_node, reward)
         print("Iteration: ", i)
     return root.best_child(0)
