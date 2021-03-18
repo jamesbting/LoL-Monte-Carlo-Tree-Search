@@ -25,7 +25,7 @@ config = {
     'champions': {
         'fileName': "data/champions-cleaned.json"
     },
-    'iterations': 10000
+    'iterations': 1000
 }
 
 
