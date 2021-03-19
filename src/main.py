@@ -10,8 +10,8 @@ config = {
         'fileName': "../../data/champions-cleaned.json"
     },
     'filtered_dataset': '../../data/filtered-dataset.csv',
-    'iterations': 1,
-    'defaultPolicy': 'cosine', #options are: ['random_winner', 'nn', 'monte-carlo', 'cosine']
+    'iterations': 1000,
+    'defaultPolicy': 'random_winner', #options are: ['random_winner', 'nn', 'cosine']
 }
 
 
@@ -38,7 +38,7 @@ def show_results(result, time, memory_usage):
     print('Result:', result)
     node_count = count_nodes(result.parent)
     print('Monte Carlo Tree Search created', node_count, 'tree nodes.')
-    print('Took ',time , ' seconds to run.')
+    print('Took ',time , ' seconds to run, and average iteration time of', time / config['iterations'], 'seconds.')
     print('Peak memory usage was: ', memory_usage/1000000, 'megabytes.')
 
 def count_nodes(root):

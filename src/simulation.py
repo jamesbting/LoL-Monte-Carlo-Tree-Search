@@ -12,11 +12,16 @@ def cosine_similarity(state, simulation_metadata):
     combinations = simulation_metadata
     max_similarity = -2
     reward = 0
+    #check if state exists
+    if state in combinations:
+        return combinations[state]
+
+    #no exact copy of state exists so do cosine similarity
     for combination in combinations.keys():
         if cosine(state, combination) > max_similarity:
             max_similarity = cosine(state, combination)
             reward = combinations[combination]
-    return reward if random() > max_similarity else 1 - reward
+    return reward if random() < max_similarity else 1 - reward
 
 def cosine(a, b):
     a = np.array(a)
