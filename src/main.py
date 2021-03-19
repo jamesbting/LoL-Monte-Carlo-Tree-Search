@@ -10,23 +10,25 @@ config = {
         'fileName': "../../data/champions-cleaned.json"
     },
     'filtered_dataset': '../../data/filtered-dataset.csv',
+    'win_rate_file': '../../data/win_rate.txt',
     'iterations': 1000,
-    'defaultPolicy': 'random_winner', #options are: ['random_winner', 'nn', 'cosine']
+    'defaultPolicy': 'mc', #options are: ['random_winner', 'nn', 'cosine', 'mc']
 }
 
 
 def main():
     champion_pool = json.load(open(config['champions']['fileName'], 'r'))
     initial_state = generate_initial_state(['121', '24', '18'], ['11', '26'], champion_pool)
-   
+    i = config['iterations']
 
     if config['defaultPolicy'] == 'random_winner':
-        run_algorithm(initial_state, config['iterations'], simulation.random_winner)
+        run_algorithm(initial_state, i, simulation.random_winner)
     if config['defaultPolicy'] == 'cosine':
         combinations = simulation.cosine_metadata(config['filtered_dataset'])
-        run_algorithm(initial_state, config['iterations'], simulation.cosine_similarity, combinations)
-
-
+        run_algorithm(initial_state, i, simulation.cosine_similarity, combinations)
+    if config['defaultPolicy'] == 'mc':
+        win_rate = simulation.load_win_rate(config['win_rate_file'])
+        run_algorithm(initial_state, i, simulation.majority_class, win_rate)
 def run_algorithm(initial_state, iterations, defaultPolicy, simulation_metadata=None):
     start_time = time.time()
     res = UCT(initial_state, config['iterations'], defaultPolicy, simulation_metadata)

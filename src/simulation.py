@@ -6,7 +6,7 @@ import csv
 #1 if blue team wins and 0 if red team wins
 
 def random_winner(state, simulation_metadata):
-    return 1 if random() > 0.5 else 0
+    return 1 if random() < 0.5 else 0
 
 def cosine_similarity(state, simulation_metadata):
     combinations = simulation_metadata
@@ -39,6 +39,13 @@ def cosine_metadata(filename):
             state = convert_to_state(row)
             res[state] = int(row[len(row) - 1])
     return res
+
+def majority_class(state, simulation_metadata):
+    return 1 if random() < simulation_metadata else 0
+def load_win_rate(win_rate_file):
+    with open(win_rate_file, 'r') as f:
+        content = f.readlines()
+        return int(content[0]) / int(content[1])
 
 def convert_to_state(combination):
     res = [0 for i in range(154)] #154 champions
