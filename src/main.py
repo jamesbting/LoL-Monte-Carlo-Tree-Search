@@ -12,7 +12,8 @@ config = {
     'filtered_dataset': '../../data/filtered-dataset.csv',
     'win_rate_file': '../../data/win_rate.txt',
     'iterations': 1000,
-    'defaultPolicy': 'nn', #options are: ['random_winner', 'nn', 'cosine', 'mc']
+    'update_frequency': 100,
+    'defaultPolicy': 'mc', #options are: ['random_winner', 'nn', 'cosine', 'mc']
     'nn': 
     {
         'location': "../nn-reward-function/models/trained-champion-nn-champion-model-1616545761.pickle"
@@ -23,27 +24,26 @@ config = {
 def main():
     champion_pool = json.load(open(config['champions']['fileName'], 'r'))
     initial_state = generate_initial_state(['121', '24', '18'], ['11', '26'], champion_pool)
-    i = config['iterations']
 
     if config['defaultPolicy'] == 'random_winner':
-        run_algorithm(initial_state, i, simulation.random_winner)
+        run_algorithm(initial_state, simulation.random_winner)
 
     if config['defaultPolicy'] == 'cosine':
         combinations = simulation.cosine_metadata(config['filtered_dataset'])
-        run_algorithm(initial_state, i, simulation.cosine_similarity, combinations)
+        run_algorithm(initial_state, simulation.cosine_similarity, combinations)
 
     if config['defaultPolicy'] == 'mc':
         win_rate = simulation.load_win_rate(config['win_rate_file'])
-        run_algorithm(initial_state, i, simulation.majority_class, win_rate)
+        run_algorithm(initial_state, simulation.majority_class, win_rate)
     
     if config['defaultPolicy'] == 'nn':
         network = simulation.load_nn(config['nn']['location'])
-        run_algorithm(initial_state, i, simulation.forward_pass, network)
+        run_algorithm(initial_state, simulation.forward_pass, network)
 
 
-def run_algorithm(initial_state, iterations, defaultPolicy, simulation_metadata=None):
+def run_algorithm(initial_state, defaultPolicy, simulation_metadata=None):
     start_time = time.time()
-    res = UCT(initial_state, config['iterations'], defaultPolicy, simulation_metadata)
+    res = UCT(initial_state, config['iterations'], config['update_frequency'], defaultPolicy, simulation_metadata)
     finish_time = time.time()
     show_results(res, finish_time - start_time, psutil.Process().memory_info().peak_wset)
 
