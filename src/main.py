@@ -12,7 +12,11 @@ config = {
     'filtered_dataset': '../../data/filtered-dataset.csv',
     'win_rate_file': '../../data/win_rate.txt',
     'iterations': 1000,
-    'defaultPolicy': 'mc', #options are: ['random_winner', 'nn', 'cosine', 'mc']
+    'defaultPolicy': 'nn', #options are: ['random_winner', 'nn', 'cosine', 'mc']
+    'nn': 
+    {
+        'location': "../nn-reward-function/models/trained-champion-nn-champion-model-1616545761.pickle"
+    }
 }
 
 
@@ -23,12 +27,20 @@ def main():
 
     if config['defaultPolicy'] == 'random_winner':
         run_algorithm(initial_state, i, simulation.random_winner)
+
     if config['defaultPolicy'] == 'cosine':
         combinations = simulation.cosine_metadata(config['filtered_dataset'])
         run_algorithm(initial_state, i, simulation.cosine_similarity, combinations)
+
     if config['defaultPolicy'] == 'mc':
         win_rate = simulation.load_win_rate(config['win_rate_file'])
         run_algorithm(initial_state, i, simulation.majority_class, win_rate)
+    
+    if config['defaultPolicy'] == 'nn':
+        network = simulation.load_nn(config['nn']['location'])
+        run_algorithm(initial_state, i, simulation.forward_pass, network)
+
+
 def run_algorithm(initial_state, iterations, defaultPolicy, simulation_metadata=None):
     start_time = time.time()
     res = UCT(initial_state, config['iterations'], defaultPolicy, simulation_metadata)
