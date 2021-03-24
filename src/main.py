@@ -7,16 +7,16 @@ from monte_carlo import UCTSearch as UCT
 
 config = {
     'champions': {
-        'fileName': "../../data/champions-cleaned.json"
+        'fileName': "../data/champions-cleaned.json"
     },
-    'filtered_dataset': '../../data/filtered-dataset.csv',
-    'win_rate_file': '../../data/win_rate.txt',
+    'filtered_dataset': '../data/filtered-dataset-no-header.csv',
+    'win_rate_file': '../data/win_rate.txt',
     'iterations': 1000,
     'update_frequency': 100,
-    'defaultPolicy': 'mc', #options are: ['random_winner', 'nn', 'cosine', 'mc']
+    'defaultPolicy': 'nn', #options are: ['random_winner', 'nn', 'cosine', 'mc']
     'nn': 
     {
-        'location': "../nn-reward-function/models/trained-champion-nn-champion-model-1616545761.pickle"
+        'location': "../nn-reward-function/models/champion-model-1616559805/model.pickle"
     }
 }
 
@@ -52,8 +52,8 @@ def show_results(result, time, memory_usage):
     print('Result:', result)
     node_count = count_nodes(result.parent)
     print('Monte Carlo Tree Search created', node_count, 'tree nodes.')
-    print('Took ',time , ' seconds to run, and average iteration time of', time / config['iterations'], 'seconds.')
-    print('Peak memory usage was: ', memory_usage/1000000, 'megabytes.')
+    print('Took',time , 'seconds to run, and average iteration time of', time / config['iterations'], 'seconds.')
+    print('Peak memory usage was:', memory_usage/1000000, 'megabytes.')
 
 def count_nodes(root):
     q = queue.Queue()

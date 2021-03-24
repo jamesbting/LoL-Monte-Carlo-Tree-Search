@@ -38,7 +38,6 @@ def cosine_metadata(filename):
     res = {}
     with open(filename, 'r') as f:
         reader = csv.reader(f, delimiter=',')
-        next(reader)
         for row in reader:
             state = convert_to_state(row)
             res[state] = int(row[len(row) - 1])
