@@ -16,10 +16,13 @@ This repository is an implementation of a Monte Carlo Tree Search algorithm that
 
 The following Python modules are required as well
 
-- psutil
-- numpy
+- psutil 5.8.0
+- numpy 1.20.1
+- torch 1.7.1+cu110
 
 You can install each module by running the command ```pip install <MODULE_NAME>```
+
+This program has not been validated on any other versions of the perquisites. 
 
 ## Setting up the program 
 
