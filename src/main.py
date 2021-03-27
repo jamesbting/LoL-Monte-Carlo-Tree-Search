@@ -92,7 +92,7 @@ def generate_initial_state(blue_team, red_team, champion_pool):
 
 def save_results(results, policy, location):
     today = date.today().strftime('%d-%m-%Y')
-    curr_time = time.time()
+    curr_time = int(time.time())
     average_time = 0
     with open(f'{location}/results-{policy}-{today}-{curr_time}.csv', 'w', newline='') as f:
         writer = csv.writer(f)
