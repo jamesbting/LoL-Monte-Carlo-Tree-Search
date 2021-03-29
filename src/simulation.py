@@ -1,6 +1,6 @@
 from random import random as random
 import numpy as np
-from math import sqrt
+from math import sqrt, inf
 import csv
 import torch
 from champion_net import ChampionNet
@@ -11,10 +11,10 @@ def random_winner(state, simulation_metadata):
 
 
 #cosine similarity: search the dataset for an exact copy, and if a copy exists, return the winrate, otherwise, perform a cosine similarity to determin
-#the most similar combination, and use that similairy as the probablity of blue team winning
+#the most similarcombination, and use that similairy as the probablity of blue team winning
 def cosine_similarity(state, simulation_metadata):
     combinations = simulation_metadata
-    max_similarity = -2
+    max_similarity = -1 * inf
     reward = 0
     #check if state exists
     if state in combinations:

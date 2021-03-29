@@ -13,14 +13,14 @@ config = {
     },
     'filtered_dataset': '../data/filtered-dataset-no-header.csv',
     'win_rate_file': '../data/win_rate.txt',
-    'iterations': 1000,
+    'iterations': 1,
     'update_frequency': 100,
-    'default_policy': 'nn', #options are: ['random_winner', 'nn', 'cosine', 'mc']
+    'default_policy': 'cosine', #options are: ['random', 'nn', 'cosine', 'mc']
     'nn': 
     {
         'location': "../nn-reward-function/models/champion-model-1616800920/model.pickle"
     },
-    'num_experiments': 100,
+    'num_experiments': 1,
     'results_location': 'results'
 }
 
@@ -28,30 +28,32 @@ config = {
 def main():
     champion_pool = json.load(open(config['champions']['fileName'], 'r'))
     initial_state = generate_initial_state(['121', '24', '18'], ['11', '26'], champion_pool)
-    run_experiment(config['default_policy'], config['num_experiments'], initial_state, location = config['results_location'])
+    default_policy = config['default_policy']
+    i = config['num_experiments']
+    save_location = config['results_location']
+    
+    if default_policy == 'random':
+        run_experiment(default_policy, i, initial_state, simulation.random_winner, location=save_location)
+
+    if default_policy == 'cosine':
+        combinations = simulation.cosine_metadata(config['filtered_dataset'])
+        run_experiment(default_policy, i, initial_state, simulation.cosine_similarity, metadata=combinations, location=save_location)
+
+    if default_policy == 'mc':
+        win_rate = simulation.load_win_rate(config['win_rate_file'])
+        run_experiment(default_policy, i, initial_state, simulation.majority_class, metadata=win_rate, location=save_location)
+        
+    if default_policy == 'nn':
+        network = simulation.load_nn(config['nn']['location'])
+        run_experiment(default_policy, i, initial_state, simulation.forward_pass, metadata=network, location=save_location)
 
 
 
-
-def run_experiment(default_policy, iterations, initial_state, location=None):
+def run_experiment(default_policy, iterations, initial_state, simulation_function, metadata = None, location=None):
     results = []
     for i in range(iterations):
         print(f'iter: {i}')
-        if default_policy == 'random':
-            results.append(run_algorithm(initial_state, simulation.random_winner))
-
-        if default_policy == 'cosine':
-            combinations = simulation.cosine_metadata(config['filtered_dataset'])
-            results.append(run_algorithm(initial_state, simulation.cosine_similarity, combinations))
-
-        if default_policy == 'mc':
-            win_rate = simulation.load_win_rate(config['win_rate_file'])
-            results.append(run_algorithm(initial_state, simulation.majority_class, win_rate))
-        
-        if default_policy == 'nn':
-            network = simulation.load_nn(config['nn']['location'])
-            results.append(run_algorithm(initial_state, simulation.forward_pass, network))
-
+        results.append(run_algorithm(initial_state, simulation_function, simulation_metadata=metadata))
     if location is not None:
         save_results(results, default_policy, location)
 

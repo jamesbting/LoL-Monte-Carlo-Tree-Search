@@ -43,7 +43,6 @@ class Node(object):
     def generate_possible_actions(self):
         res = []
         selection = 1 if self.player == Node.players["blue"] else -1
-
         for i in range(len(self.state)):
             if self.state[i] == 0:
                 action = list(self.state)[:]
