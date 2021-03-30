@@ -13,43 +13,44 @@ config = {
     },
     'filtered_dataset': '../data/filtered-dataset-no-header.csv',
     'win_rate_file': '../data/win_rate.txt',
-    'iterations': 1,
+    'iterations': 1000,
     'update_frequency': 100,
-    'default_policy': 'cosine', #options are: ['random', 'nn', 'cosine', 'mc']
-    'nn': 
-    {
-        'location': "../nn-reward-function/models/champion-model-1616800920/model.pickle"
-    },
-    'num_experiments': 1,
+    'default_policy': 'nn',  # options are: ['random', 'nn', 'cosine', 'mc']
+    'nn':
+        {
+            'location': "../nn-reward-function/models/champion-model-29-03-2021-1617075490/model.pickle"
+        },
+    'num_experiments': 100,
     'results_location': 'results'
 }
 
 
 def main():
-    champion_pool = json.load(open(config['champions']['fileName'], 'r'))
-    initial_state = generate_initial_state(['121', '24', '18'], ['11', '26'], champion_pool)
+    initial_state = generate_initial_state(['121', '24', '18'], ['11', '26'])
     default_policy = config['default_policy']
     i = config['num_experiments']
     save_location = config['results_location']
-    
+
     if default_policy == 'random':
         run_experiment(default_policy, i, initial_state, simulation.random_winner, location=save_location)
 
     if default_policy == 'cosine':
         combinations = simulation.cosine_metadata(config['filtered_dataset'])
-        run_experiment(default_policy, i, initial_state, simulation.cosine_similarity, metadata=combinations, location=save_location)
+        run_experiment(default_policy, i, initial_state, simulation.cosine_similarity, metadata=combinations,
+                       location=save_location)
 
     if default_policy == 'mc':
         win_rate = simulation.load_win_rate(config['win_rate_file'])
-        run_experiment(default_policy, i, initial_state, simulation.majority_class, metadata=win_rate, location=save_location)
-        
+        run_experiment(default_policy, i, initial_state, simulation.majority_class, metadata=win_rate,
+                       location=save_location)
+
     if default_policy == 'nn':
         network = simulation.load_nn(config['nn']['location'])
-        run_experiment(default_policy, i, initial_state, simulation.forward_pass, metadata=network, location=save_location)
+        run_experiment(default_policy, i, initial_state, simulation.forward_pass, metadata=network,
+                       location=save_location)
 
 
-
-def run_experiment(default_policy, iterations, initial_state, simulation_function, metadata = None, location=None):
+def run_experiment(default_policy, iterations, initial_state, simulation_function, metadata=None, location=None):
     results = []
     for i in range(iterations):
         print(f'iter: {i}')
@@ -66,12 +67,14 @@ def run_algorithm(initial_state, defaultPolicy, simulation_metadata=None):
     show_results(res, finish_time - start_time, memory)
     return [finish_time - start_time, psutil.Process().memory_info().peak_wset]
 
+
 def show_results(result, time, memory_usage):
     print('Result:', result)
     node_count = count_nodes(result.parent)
     print('Monte Carlo Tree Search created', node_count, 'tree nodes.')
-    print('Took',time , 'seconds to run, and average iteration time of', time / config['iterations'], 'seconds.')
-    print('Peak memory usage was:', memory_usage/1000000, 'megabytes.')
+    print('Took', time, 'seconds to run, and average iteration time of', time / config['iterations'], 'seconds.')
+    print('Peak memory usage was:', memory_usage / 1000000, 'megabytes.')
+
 
 def count_nodes(root):
     q = queue.Queue()
@@ -84,13 +87,16 @@ def count_nodes(root):
             q.put(child)
     return count
 
-def generate_initial_state(blue_team, red_team, champion_pool):
-    arr = [0] * len(champion_pool.keys())
-    for blue in blue_team:
-        arr[int(blue)] = 1
-    for red in red_team:
-        arr[int(red)] = -1
+
+def generate_initial_state(blue_team, red_team):
+    arr = []
+    for i in range(5):
+        arr.append(0 if i >= len(blue_team) else int(blue_team[i]))
+
+    for i in range(5, 10):
+        arr.append(0 if i - 5 >= len(red_team) else int(red_team[i - 5]))
     return tuple(arr)
+
 
 def save_results(results, policy, location):
     today = date.today().strftime('%d-%m-%Y')

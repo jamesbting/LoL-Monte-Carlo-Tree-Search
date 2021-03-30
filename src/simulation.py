@@ -39,19 +39,9 @@ def cosine_metadata(filename):
     with open(filename, 'r') as f:
         reader = csv.reader(f, delimiter=',')
         for row in reader:
-            state = convert_to_state(row)
+            state = tuple([int(el) for el in row[0:10]])
             res[state] = int(row[len(row) - 1])
     return res
-
-def convert_to_state(combination):
-    res = [0 for i in range(154)] #154 champions
-    for i in range(5):
-        res[int(combination[i])] = 1
-    
-    for i in range(5, 10):
-        res[int(combination[i])] = -1
-    return tuple(res)
-
 
 
 #majority class: always pick the team that wins the most
@@ -72,9 +62,19 @@ def load_nn(filename):
     model.eval()
     return model
 
+def convert_to_state(combination):
+    res = [0 for i in range(154)] #154 champions
+    for i in range(5):
+        res[int(combination[i])] = 1
+    
+    for i in range(5, 10):
+        res[int(combination[i])] = -1
+    return res
 
 def forward_pass(state, simulation_metadata):
+    long_state = convert_to_state(state)
     net = simulation_metadata
-    inputs = torch.Tensor(state)
+    inputs = torch.Tensor(long_state)
     output = net(inputs)
     return torch.argmax(output, 0)
+
