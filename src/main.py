@@ -20,7 +20,7 @@ config = {
         {
             'location': "../nn-reward-function/models/champion-model-29-03-2021-1617075490/model.pickle"
         },
-    'num_experiments': 100,
+    'num_experiments': 5,
     'results_location': 'results'
 }
 

@@ -3,8 +3,8 @@ from random import random as random
 import queue
 
 def UCTSearch(initial_state, max_iters, update_frequency, simulate_game, simulation_metadata=None):
-    first_pick = list(Node.players.keys())[1 if random() > 0.5 else 0]
-    print(f"The {first_pick} team will pick first.")
+    first_pick = Node.determine_next_pick(initial_state)
+    print(f"The {first_pick} team will pick next.")
     root = Node(state=initial_state, player=Node.players[first_pick])
 
     for i in range(max_iters + 1):
@@ -33,3 +33,4 @@ def backpropagate(node, reward):
         curr.q += reward
         reward = 1 - reward
         curr = curr.parent
+
