@@ -62,3 +62,25 @@ class Node(object):
 
     def __str__(self):
         return f"Node:\n q:{self.q};\n n:{self.n};\n state:{self.state};\n depth:{self.depth}"
+
+    @staticmethod
+    def determine_next_pick(state):
+        blue = 0
+        red = 0
+
+        for i in range(5):
+            if state[i] != 0:
+                blue += 1
+            if state[i+5] != 0:
+                red += 1
+
+        if blue == 0 and red == 0:
+            return "blue"
+        if blue == 5 and red == 5:
+            raise ValueError
+        if blue == 5 and red < 5:
+            return "blue"
+        if  blue < 5 and red == 5:
+            return "red"
+
+        return "blue" if blue < red else "red"
