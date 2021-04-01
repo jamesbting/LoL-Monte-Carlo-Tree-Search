@@ -46,7 +46,7 @@ def cosine_metadata(filename):
 
 #majority class: always pick the team that wins the most
 def majority_class(state, simulation_metadata):
-    return 1 if random() < simulation_metadata else 0
+    return 1 if simulation_metadata > 0.5 else 0
 
 def load_win_rate(win_rate_file):
     with open(win_rate_file, 'r') as f:

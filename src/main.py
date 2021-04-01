@@ -15,12 +15,12 @@ config = {
     'win_rate_file': '../data/win_rate.txt',
     'iterations': 1000,
     'update_frequency': 100,
-    'default_policy': 'nn',  # options are: ['random', 'nn', 'cosine', 'mc']
+    'default_policy': 'mc',  # options are: ['random', 'nn', 'cosine', 'mc']
     'nn':
         {
             'location': "../nn-reward-function/models/champion-model-29-03-2021-1617075490/model.pickle"
         },
-    'num_experiments': 5,
+    'num_experiments': 100,
     'results_location': 'results'
 }
 
