@@ -20,7 +20,7 @@ config = {
         {
             'location': "../nn-reward-function/models/champion-model-29-03-2021-1617075490/model.pickle"
         },
-    'num_experiments': 50,
+    'num_experiments': 100,
     'results_location': 'results/real'
 }
 
@@ -64,13 +64,13 @@ def run_algorithm(initial_state, defaultPolicy, simulation_metadata=None):
     res = UCT(initial_state, config['iterations'], config['update_frequency'], defaultPolicy, simulation_metadata)
     finish_time = time.time()
     memory = psutil.Process().memory_info().peak_wset
-    show_results(res, finish_time - start_time, memory)
-    return [finish_time - start_time, psutil.Process().memory_info().peak_wset, res.state]
+    node_count = count_nodes(res.parent)
+    show_results(res, node_count, finish_time - start_time, memory)
+    return [finish_time - start_time, psutil.Process().memory_info().peak_wset, node_count, res.state]
 
 
-def show_results(result, time, memory_usage):
+def show_results(result, node_count, time, memory_usage):
     print('Result:', result)
-    node_count = count_nodes(result.parent)
     print('Monte Carlo Tree Search created', node_count, 'tree nodes.')
     print('Took', time, 'seconds to run, and average iteration time of', time / config['iterations'], 'seconds.')
     print('Peak memory usage was:', memory_usage / 1000000, 'megabytes.')
@@ -102,14 +102,22 @@ def save_results(results, policy, location):
     today = date.today().strftime('%d-%m-%Y')
     curr_time = int(time.time())
     average_time = 0
+    average_mem = 0
+    average_nodes = 0
     with open(f'{location}/results-{policy}-{today}-{curr_time}.csv', 'w', newline='') as f:
         writer = csv.writer(f)
         for row in results:
             writer.writerow(row)
             average_time += row[0]
+            average_mem += row[1]
+            average_nodes += row[2]
     f.close()
     average_time /= len(results)
+    average_mem /= len(results)
+    average_nodes /= len(results)
     print(f'Average time: {average_time}')
+    print(f'Average peak memory usage: {average_mem}')
+    print(f'Average nodes: {average_nodes}')
 
 
 if __name__ == '__main__':
