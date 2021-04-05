@@ -15,13 +15,13 @@ config = {
     'win_rate_file': '../data/win_rate.txt',
     'iterations': 1000,
     'update_frequency': 100,
-    'default_policy': 'mc',  # options are: ['random', 'nn', 'cosine', 'mc']
+    'default_policy': 'random',  # options are: ['random', 'nn', 'cosine', 'mc']
     'nn':
         {
             'location': "../nn-reward-function/models/champion-model-29-03-2021-1617075490/model.pickle"
         },
-    'num_experiments': 100,
-    'results_location': 'results'
+    'num_experiments': 50,
+    'results_location': 'results/real'
 }
 
 
@@ -65,7 +65,7 @@ def run_algorithm(initial_state, defaultPolicy, simulation_metadata=None):
     finish_time = time.time()
     memory = psutil.Process().memory_info().peak_wset
     show_results(res, finish_time - start_time, memory)
-    return [finish_time - start_time, psutil.Process().memory_info().peak_wset]
+    return [finish_time - start_time, psutil.Process().memory_info().peak_wset, res.state]
 
 
 def show_results(result, time, memory_usage):

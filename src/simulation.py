@@ -16,6 +16,7 @@ def cosine_similarity(state, simulation_metadata):
     combinations = simulation_metadata
     max_similarity = -1 * inf
     reward = 0
+
     #check if state exists
     if state in combinations:
         return combinations[state]
@@ -25,7 +26,7 @@ def cosine_similarity(state, simulation_metadata):
         if cosine(state, combination) > max_similarity:
             max_similarity = cosine(state, combination)
             reward = combinations[combination]
-    return reward if random() < max_similarity else 1 - reward
+    return reward
 
 def cosine(a, b):
     a = np.array(a)
@@ -63,7 +64,7 @@ def load_nn(filename):
     return model
 
 def convert_to_state(combination):
-    res = [0 for i in range(154)] #154 champions
+    res = [0] * 154 #154 champions
     for i in range(5):
         res[int(combination[i])] = 1
     
