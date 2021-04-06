@@ -3,7 +3,7 @@ import torch.nn as nn
 
 class ChampionNet(nn.Module):
     #constructor
-    def __init__(self, num_units=120, dropout_rate=0.5):
+    def __init__(self, num_units=128, dropout_rate=0.5):
         super(ChampionNet, self).__init__() #superclass constructor
         self.fc1 = nn.Linear(154, num_units)
         self.fc2 = nn.Linear(num_units,num_units)
