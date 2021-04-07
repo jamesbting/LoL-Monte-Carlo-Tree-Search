@@ -13,20 +13,20 @@ config = {
     },
     'filtered_dataset': '../data/filtered-dataset-no-header.csv',
     'win_rate_file': '../data/win_rate.txt',
-    'iterations': 1000,
-    'update_frequency': 1000,
-    'default_policy': 'nn',  # options are: ['random', 'nn', 'cosine', 'mc']
+    'iterations': 15,
+    'update_frequency': 15,
+    'default_policy': 'cosine',  # options are: ['random', 'nn', 'cosine', 'mc']
     'nn':
         {
-            'location': "../nn-reward-function/models/champion-model-06-04-2021-1617748751-ls128-lr0.0005-l20.05/model.pickle"
+            'location': "../nn-reward-function/models/champion-model-06-04-2021-1617757457-ls256-lr0.0005-l20.05/model.pickle"
         },
-    'num_experiments': 100,
-    'results_location': 'results'
+    'num_experiments': 10,
+    'results_location': 'results/real'
 }
 
 
 def main():
-    initial_state = generate_initial_state(['121', '24', '18', '125'], ['11', '26'])
+    initial_state = generate_initial_state(['121', '24', '18'], ['11', '26'])
     default_policy = config['default_policy']
     i = config['num_experiments']
     save_location = config['results_location']

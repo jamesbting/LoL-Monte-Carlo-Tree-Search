@@ -58,7 +58,7 @@ def load_win_rate(win_rate_file):
 #nn: get the neural network
 def load_nn(filename):
     net_dict = torch.load(filename)
-    model = ChampionNet(128)
+    model = ChampionNet(256)
     model.load_state_dict(net_dict)
     model.eval()
     return model
