@@ -18,7 +18,7 @@ config = {
     'default_policy': 'nn',  # options are: ['random', 'nn', 'cosine', 'mc']
     'nn':
         {
-            'location': "../nn-reward-function/models/champion-model-04-04-2021-1617570801/model.pickle"
+            'location': "../nn-reward-function/models/champion-model-06-04-2021-1617748751-ls128-lr0.0005-l20.05/model.pickle"
         },
     'num_experiments': 100,
     'results_location': 'results'

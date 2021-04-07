@@ -58,7 +58,7 @@ def load_win_rate(win_rate_file):
 #nn: get the neural network
 def load_nn(filename):
     net_dict = torch.load(filename)
-    model = ChampionNet()
+    model = ChampionNet(128)
     model.load_state_dict(net_dict)
     model.eval()
     return model
@@ -77,5 +77,5 @@ def forward_pass(state, simulation_metadata):
     net = simulation_metadata
     inputs = torch.Tensor(long_state)
     output = net(inputs)
-    return torch.argmax(output, 0)
+    return 1 if output.item() > 0.5 else 0
 
